@@ -2,7 +2,7 @@ from datetime import datetime
 from question import Question
 
 
-class QuestionGroup:
+class QuestionCluster:
     """Group of Question objects.
 
     Attributes:
