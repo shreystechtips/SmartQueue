@@ -2,7 +2,7 @@ from datetime import datetime
 from question import Question
 
 
-class QuestionCluster:
+class QuestionGroup:
     """Group of Questions.
 
     Attributes:
@@ -12,8 +12,8 @@ class QuestionCluster:
 
     """
 
-    def __init__(self, cluster_id: str, questions: list[Question], active:
+    def __init__(self, group_id: str, questions: list[Question], active:
                  bool):
-        self.cluster_id = cluster_id
+        self.cluster_id = group_id
         self.questions = questions
         self.active = active
