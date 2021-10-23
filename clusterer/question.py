@@ -1,16 +1,20 @@
 from datetime import datetime
-from uuid import UUID
 
 
 class Question:
     """Question asked by user.
 
     Attributes:
-        text(str): Question text.
-        time_posted(datetime): Date posted.
+        question_id: Question identifier.
+        user_id: User who asked the question.
+        text Question text.
+        time_posted: Date posted.
 
     """
-    def __init__(self, text: str, time_posted: datetime, user_id: UUID):
+
+    def __init__(self, question_id: str, user_id: str, text: str,
+                 time_posted: datetime):
+        self.question_id = question_id
+        self.user_id = user_id
         self.text = text
         self.time_posted = time_posted
-        self.user_id = user_id

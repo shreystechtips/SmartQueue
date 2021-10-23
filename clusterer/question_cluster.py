@@ -10,6 +10,8 @@ class QuestionCluster:
         active: True if questions should still be added to group.
 
     """
-    def __init__(self, questions: list[Question], active: bool):
+
+    def __init__(self, cluster_id: str, questions: list[Question], active:
+                 bool):
         self.questions = questions
         self.active = active
