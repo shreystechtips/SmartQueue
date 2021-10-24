@@ -117,16 +117,6 @@ last_updated = None
 def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     global cache
     global last_updated
-    # with open("test.json","r") as f:
-    #     temp = json.loads(f.read())
-    #     for x in temp:
-    #         try:
-    #             temp[x]['last_time_updated'] = datetime.datetime.strptime(temp[x]['last_time_updated'], "%Y-%m-%d %H:%M:%S")
-    #         except:
-    #             continue
-    #     cache = temp
-    #     # print(cache)
-    # return
     
     if last_updated and datetime.now() - last_updated <= timedelta(minutes = 5):
         return
@@ -141,12 +131,7 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
             if db_data:
                 updated_time = db_data[5]
             if not db_data or datetime.utcnow() - updated_time >= time_diff:
-                # print('hi')
-                # if db_data:
-                #     # print(datetime.utcnow() - updated_time)
-                #     # print(datetime.utcnow())
-                #     # print(updated_time)
-                # # print(data)
+
                 if not db_data:
                     print("no data")
                     sql_statement = f'INSERT INTO location_data ({", ".join(columns)}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
@@ -162,52 +147,29 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
                 
                 cur.execute(sql_statement, data)
 
-                # print(f'delete_accounts(): status message: {cur.statusmessage}')
             if data:
                 library_cache = {}
                 for k,v in zip(columns, db_data):
                     library_cache[k] = v
-                # print(library_cache)
+                
                 library_cache["popular_times"] = json.loads(library_cache["popular_times"] )
                 temp_cache.append(library_cache)
-    # cache.update(temp_cache)
-    # print(temp_cache)
+
     cache = sorted([x for x in temp_cache], key=  lambda x: x['popularity'])
-    # print(cache)
-    # with open("test.json","w") as f:
-    #     f.write(json.dumps(cache, default=str))
+
     conn.commit()
     last_updated = datetime.now()
-    # s.enter(60, 1, back_run, (conn,))
 
+try:
 
+    conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=$HOME/.postgresql/root.crt'
+    conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
+    # print(conn_str)
+    conn = psycopg2.connect(conn_str)
+except Exception as e:
+    print('Failed to connect to database.')
+    print('{0}'.format(e))
+
+back_run(conn)
 if __name__ =='__main__':
-    # ref.on_snapshot(lambda x,y,z: firestore_update(x,y,z,datas))
-    try:
-        # engine = create_engine(os.getenv("DB_CONN"))
-        conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=$HOME/.postgresql/root.crt'
-        conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
-        print(conn_str)
-        conn = psycopg2.connect(conn_str)
-        # print(fulfill_request_helper("SELECT * FROM location_data",conn))
-    except Exception as e:
-        print('Failed to connect to database.')
-        print('{0}'.format(e))
-
-            #cockroach_data, http_code = fulfill_request_helper(sql_statement, conn)
-
-    # print('hello2')
-    # s.enter(0, 1, back_run, (conn,))
-    # s.run()
-    back_run(conn)
-
     app.run(host="0.0.0.0")
-    # def fulfill_request_helper(sql_statement, conn):
-
-    # with conn.cursor() as cur:
-        
-    #     rows = cur.fetchall()
-    #     if rows:
-    #         return rows, 200
-    #     else:
-    #         return rows, 404
