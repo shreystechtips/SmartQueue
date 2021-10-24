@@ -160,9 +160,12 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     conn.commit()
     last_updated = datetime.now()
 
+with open("root2.crt","w") as f:
+    f.write(os.getenv("ROOT_KEY"))
+    
 try:
 
-    conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=root.crt'
+    conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=root2.crt'
     conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
     # print(conn_str)
     conn = psycopg2.connect(conn_str)
