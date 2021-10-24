@@ -162,7 +162,7 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
 
 try:
 
-    conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=$HOME/.postgresql/root.crt'
+    conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=./root.crt'
     conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
     # print(conn_str)
     conn = psycopg2.connect(conn_str)
