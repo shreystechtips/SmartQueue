@@ -10,6 +10,11 @@ body {
     font-family: 'Mulish', sans-serif;
 }
 
+a, a:hover, a:focus, a:active {
+    color: inherit;
+}
+
+
 .circle {
     position: absolute;
     background-color: var(--medium-blue);
@@ -55,12 +60,12 @@ body {
 
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-top-left-radius: 32px;
-    border-bottom-left-radius: 32px;
+    /* border-bottom-left-radius: 32px; */
 }
 
 #title {
     position: absolute;
-    top: 45%;
+    top: 44%;
     left: 20%;
     font-weight: 800;
 
@@ -73,5 +78,105 @@ body {
 
 #title-description {
     font-size: 5vh;
-    margin-top: 2%;
+
+    height: 15vh;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+
+    cursor: pointer;
+}
+
+#title-button {
+    font-family: 'Mulish', sans-serif;
+    border-radius: 16px;
+    color: var(--medium-blue);
+    background-color: white;
+
+    padding: 12px 16px;
+
+    font-size: 3vh;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    border: none; 
+
+    margin-top: 1.5vh;
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar-back {
+    cursor: pointer;
+}
+
+#sidebar-header {
+    padding: 16px 32px;
+    font-size: 5vh;
+    font-weight: 700;
+    color: white;
+
+    background-color: var(--dark-blue);
+    border-top-left-radius: 32px;
+}
+
+#sidebar-libraries {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+.library {
+    position: relative;
+
+    border-left-style: solid;
+    border-left-color: var(--medium-blue);
+    border-left-width: 4px;
+    color: var(--medium-blue);
+    padding-left: 8px;
+
+    cursor: pointer;
+
+    font-size: 2.5vh;
+    font-weight: 600;
+
+    min-height: min-content;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.library-name {
+    font-size: 3vh;
+    font-weight: 700;
+}
+
+.library-drop {
+    font-size: 5vh;
+    font-weight: 600;
+}
+
+.library-popularity {
+    font-size: 2.5vh;
+    font-weight: 600;
+}
+
+.library-times-title {
+    
+}
+.library-times-ranges {
+    padding-left: 16px;
+    font-size: 2vh;
+    font-weight: 600;
+}
+.library-location {
+    text-decoration: underline;
+    font-weight: 700
 }
