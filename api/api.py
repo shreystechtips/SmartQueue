@@ -20,12 +20,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_cockroachdb import run_transaction
 
+from flask_cors import CORS
+
 from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("API_KEY")
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+cors = CORS(app)
 
 import json   
 
@@ -70,13 +73,13 @@ def fulfil_request(data):
                 temp.append(x)
         sorted_values = sorted([x for x in temp], 
                         key= lambda x: (geopy.distance.distance(location, data["coordinates"]).miles, x['popularity']))
-                   
+
     return {'ret': sorted_values}
 
     
 
 ## get all info 
-@app.route(f'/api/v0/get_all', methods = ["GET"])
+@app.route(f'/api/v0/get_all', methods = ["POST"])
 def add_queue():
     data = request.get_json()
     if check_headers(data, ["type"]):
@@ -85,7 +88,7 @@ def add_queue():
     return "bad request", 404
 
 #A json get request with {coordinates:(lat,lng), radius:float, type: library, building, all}
-@app.route(f'/api/v0/get_near', methods = ["GET"])
+@app.route(f'/api/v0/get_near', methods = ["POST"])
 def remove_queue():
     data = request.get_json()
     if check_headers(data, ["coordinates", "radius","type"]):
@@ -109,9 +112,11 @@ def update():
    back_run(conn) 
    return "",200
 
+last_updated = None
+
 def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     global cache
-
+    global last_updated
     # with open("test.json","r") as f:
     #     temp = json.loads(f.read())
     #     for x in temp:
@@ -122,6 +127,9 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     #     cache = temp
     #     # print(cache)
     # return
+    
+    if last_updated and datetime.now() - last_updated <= timedelta(minutes = 5):
+        return
 
     libraries = read_libraries()
     columns = ['id', 'type', 'popularity', 'name', 'loc_point', 'last_time_updated', 'url', 'popular_times']
@@ -160,6 +168,7 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
                 for k,v in zip(columns, db_data):
                     library_cache[k] = v
                 # print(library_cache)
+                library_cache["popular_times"] = json.loads(library_cache["popular_times"] )
                 temp_cache.append(library_cache)
     # cache.update(temp_cache)
     # print(temp_cache)
@@ -168,6 +177,7 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     # with open("test.json","w") as f:
     #     f.write(json.dumps(cache, default=str))
     conn.commit()
+    last_updated = datetime.now()
     # s.enter(60, 1, back_run, (conn,))
 
 
