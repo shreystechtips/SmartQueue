@@ -35,13 +35,16 @@ const hourToString = hour => {
     }
 }
 
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 export default function Library({info}) {
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = () => setExpanded(!expanded);
 
     let day = new Date().getDay()
     let shifted = day === 0 ? 6 : day - 1
-    let hourRanges = getHourRange(info.popular_times[shifted].data)
+    var dayOfInterest = {};
+
+    let hourRanges =  info.popular_times.length == 7 ? getHourRange(info.popular_times[shifted].data)  : []
 
     let expandInfo = (
         <div className="library-extra">
@@ -58,11 +61,15 @@ export default function Library({info}) {
     )
     return (
         <div className="library" onClick={toggleExpanded}>
-            <div className="library-name">{info.Name}</div>
-            <div className="library-popularity">Busyness Level: {info.current_popularity}%
+            <div className="library-left">
+                <div className="library-name">{info.name}</div>
+                <div className="library-popularity">Busyness Level: {info.popularity}%
+                </div>
+            
+                {expanded ? expandInfo : <span />}
             </div>
+            
             <FontAwesomeIcon icon={expanded ? faCaretUp : faCaretDown}className="library-drop" />
-            {expanded ? expandInfo : <span />}
         </div>
     )
 }
