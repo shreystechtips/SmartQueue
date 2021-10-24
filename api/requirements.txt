@@ -34,3 +34,7 @@ six==1.16.0
 uritemplate==4.1.1
 urllib3==1.26.7
 Werkzeug==2.0.2
+psycopg2-binary==2.9.1
+populartimes @ git+https://github.com/m-wrzr/populartimes@3d3df3f306b6f65d7cf9f5c9387ea665bdfbf836
+sqlalchemy
+sqlalchemy-cockroachdb==1.4.2
