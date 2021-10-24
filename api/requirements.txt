@@ -39,3 +39,4 @@ populartimes @ git+https://github.com/m-wrzr/populartimes@3d3df3f306b6f65d7cf9f5
 sqlalchemy
 sqlalchemy-cockroachdb==1.4.2
 geopy==2.2.0
+flask-cors
