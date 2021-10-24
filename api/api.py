@@ -59,21 +59,21 @@ def fulfil_request(data):
     global cache
     
     sorted_values = cache
-
     if "radius" and "coordinates" in data:
         temp = []
-        # sorted_values = sorted([cache[place_id] for place_id in cache], key: lambda x: (geopy.distance.distance(x['loc_point'], x['popularity']))
         for x in sorted_values:
-            # x = sorted_values[place_id]
-            # place_id = x['id']
-            print(data["coordinates"], x['loc_point'])
-            location = (float(val.strip("()")) for val in x['loc_point'].split(","))
+            location = tuple(float(val.strip("()")) for val in x['loc_point'].split(","))
             
             if geopy.distance.distance(location, data["coordinates"]).miles < data['radius']:
+                x['distance'] = geopy.distance.distance(location, data["coordinates"]).miles
                 temp.append(x)
         sorted_values = sorted([x for x in temp], 
-                        key= lambda x: (geopy.distance.distance(location, data["coordinates"]).miles, x['popularity']))
-
+                        key= lambda x: (geopy.distance.distance(location, data["coordinates"]).miles, x['popularity']), reverse = True)
+        #
+    else:
+        for i in range(len(sorted_values)):
+            sorted_values[i]['distance'] = 0
+            
     return {'ret': sorted_values}
 
     
