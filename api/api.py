@@ -48,8 +48,6 @@ def check_headers(data, headers):
     return True
 
 
-
-
 def fulfil_request(data):
     """
     takes the input from the api call and then returns the data we are interested in
@@ -159,9 +157,6 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
 
     conn.commit()
     last_updated = datetime.now()
-
-# with open("root2.crt","w") as f:
-#     f.write(os.getenv("ROOT_KEY"))
     
 try:
 
