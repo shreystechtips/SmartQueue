@@ -1,0 +1,1 @@
+web: cd api && gunicorn --bind 0.0.0.0:5000 wsgi:app  --daemon
