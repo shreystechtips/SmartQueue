@@ -10,6 +10,11 @@ body {
     font-family: 'Mulish', sans-serif;
 }
 
+a, a:hover, a:focus, a:active {
+    color: inherit;
+}
+
+
 .circle {
     position: absolute;
     background-color: var(--medium-blue);
@@ -55,7 +60,7 @@ body {
 
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-top-left-radius: 32px;
-    border-bottom-left-radius: 32px;
+    /* border-bottom-left-radius: 32px; */
 }
 
 #title {
@@ -65,6 +70,8 @@ body {
     font-weight: 800;
 
     color: white;
+
+    cursor: pointer;
 }
 
 #title-header {
@@ -73,5 +80,79 @@ body {
 
 #title-description {
     font-size: 5vh;
-    margin-top: 2%;
+
+    height: 15vh;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+#sidebar-header {
+    padding: 16px 32px;
+    font-size: 5vh;
+    font-weight: 700;
+    color: white;
+
+    background-color: var(--dark-blue);
+    border-top-left-radius: 32px;;
+}
+
+#sidebar-libraries {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+.library {
+    position: relative;
+
+    border-left-style: solid;
+    border-left-color: var(--medium-blue);
+    border-left-width: 4px;
+    color: var(--medium-blue);
+    padding-left: 8px;
+
+    cursor: pointer;
+
+    font-size: 3.5vh;
+    font-weight: 600;
+}
+
+.library-name {
+    font-size: 4vh;
+    font-weight: 700;
+}
+
+.library-drop {
+    display: flex;
+    justify-content: space-between;
+    font-size: 5vh;
+    font-weight: 600;
+
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.library-popularity {
+    font-size: 3.5vh;
+    font-weight: 600;
+}
+
+.library-times-title {
+    
+}
+.library-times-ranges {
+    padding-left: 16px;
+    font-size: 3vh;
+    font-weight: 600;
+}
+.library-location {
+    text-decoration: underline;
+    font-weight: 700
 }
