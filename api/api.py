@@ -35,7 +35,8 @@ def read_libraries(filename="libraries.json"):
     return libraries
 
 libraries = read_libraries()
-cache = {}
+cache = []
+conn = None
 
 def check_headers(data, headers):
     for header in headers:
@@ -62,7 +63,9 @@ def fulfil_request(data):
         for x in sorted_values:
             # x = sorted_values[place_id]
             # place_id = x['id']
+            print(data["coordinates"], x['loc_point'])
             location = (float(val.strip("()")) for val in x['loc_point'].split(","))
+            
             if geopy.distance.distance(location, data["coordinates"]).miles < data['radius']:
                 temp.append(x)
         sorted_values = sorted([x for x in temp], 
@@ -76,7 +79,6 @@ def fulfil_request(data):
 @app.route(f'/api/v0/get_all', methods = ["GET"])
 def add_queue():
     data = request.get_json()
-    print(api_key)
     if check_headers(data, ["type"]):
         ## do thing
         return fulfil_request(data),200
@@ -97,11 +99,17 @@ def ping_api():
     return "I'm There!", 200
 
 def get_key_time(key, cur):
-    print(key)
     cur.execute("SELECT * FROM location_data WHERE id LIKE %s", (key,))
     return cur.fetchone()
 
-def back_run(conn, time_diff = timedelta(minutes = 10)):
+
+
+@app.route(f'/api/v0/update', methods = ["GET"])
+def update():
+   back_run(conn) 
+   return "",200
+
+def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
     global cache
 
     # with open("test.json","r") as f:
@@ -117,7 +125,7 @@ def back_run(conn, time_diff = timedelta(minutes = 10)):
 
     libraries = read_libraries()
     columns = ['id', 'type', 'popularity', 'name', 'loc_point', 'last_time_updated', 'url', 'popular_times']
-    temp_cache = {}
+    temp_cache = []
     for library in libraries:
         with conn.cursor() as cur:
             data = populartimes.get_id(api_key, library)
@@ -125,28 +133,42 @@ def back_run(conn, time_diff = timedelta(minutes = 10)):
             if db_data:
                 updated_time = db_data[5]
             if not db_data or datetime.utcnow() - updated_time >= time_diff:
-                print('hi')
-                if db_data:
-                    print(datetime.utcnow() - updated_time)
-                print(data)
-                sql_statement = f'INSERT INTO location_data ({", ".join(columns)}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-                data =  (library, "library", data.get("current_popularity",0), libraries.get(library), 
-                    f'({data.get("coordinates").get("lat")},{data.get("coordinates").get("lng")})', datetime.utcnow(), 
-                    f'https://www.google.com/maps/place/?q=place_id:{library}', json.dumps(data.get("populartimes", [])))
+                # print('hi')
+                # if db_data:
+                #     # print(datetime.utcnow() - updated_time)
+                #     # print(datetime.utcnow())
+                #     # print(updated_time)
+                # # print(data)
+                if not db_data:
+                    print("no data")
+                    sql_statement = f'INSERT INTO location_data ({", ".join(columns)}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+                    data =  (library, "library", data.get("current_popularity",0), libraries.get(library), 
+                        f'({data.get("coordinates").get("lat")},{data.get("coordinates").get("lng")})', datetime.utcnow(), 
+                        f'https://www.google.com/maps/place/?q=place_id:{library}', json.dumps(data.get("populartimes", [])))
+                else:
+                    print("data")
+                    sql_statement = f'UPDATE location_data SET {", ".join([x+" = %s" for x in columns if not x == "id"])} WHERE id = %s'
+                    data = ("library", data.get("current_popularity",0), libraries.get(library), 
+                        f'({data.get("coordinates").get("lat")},{data.get("coordinates").get("lng")})', datetime.utcnow(), 
+                        f'https://www.google.com/maps/place/?q=place_id:{library}', json.dumps(data.get("populartimes", [])), library)
+                
                 cur.execute(sql_statement, data)
+
                 # print(f'delete_accounts(): status message: {cur.statusmessage}')
             if data:
                 library_cache = {}
-                for k,v in zip(columns, data):
+                for k,v in zip(columns, db_data):
                     library_cache[k] = v
-                print(library_cache)
-                temp_cache[library] = library_cache
-    cache.update(temp_cache)
-    cache = sorted([cache[place_id] for place_id in cache], key=  lambda x: x['popularity'])
+                # print(library_cache)
+                temp_cache.append(library_cache)
+    # cache.update(temp_cache)
+    # print(temp_cache)
+    cache = sorted([x for x in temp_cache], key=  lambda x: x['popularity'])
+    # print(cache)
     # with open("test.json","w") as f:
     #     f.write(json.dumps(cache, default=str))
     conn.commit()
-    s.enter(60, 1, back_run, (conn,))
+    # s.enter(60, 1, back_run, (conn,))
 
 
 if __name__ =='__main__':
@@ -164,11 +186,10 @@ if __name__ =='__main__':
 
             #cockroach_data, http_code = fulfill_request_helper(sql_statement, conn)
 
-    print('hello2')
-    s.enter(0, 1, back_run, (conn,))
-    s.run()
-    print('hello')
-    # back_run(conn)
+    # print('hello2')
+    # s.enter(0, 1, back_run, (conn,))
+    # s.run()
+    back_run(conn)
 
     app.run(host="0.0.0.0")
     # def fulfill_request_helper(sql_statement, conn):
