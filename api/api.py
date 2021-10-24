@@ -9,42 +9,45 @@ import threading
 
 app = Flask(__name__)
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from firebase_admin import auth
-cred = credentials.Certificate('keys/creds.json')
-firebase_admin.initialize_app(cred)
-firestore_db = firestore.client()
-# callback_done = threading.Event()
-# ref = firestore_db.collection(u'users')
-import json
+import json    
 
-def get_user_id(request):
-    try:
-        token = request.headers.get("User-Token")
-        uid = auth.verify_id_token(token)['uid'] if token else None
-        return uid
-    except:
-        return None
-    
-        
+def check_headers(data, headers):
+    for header in headers:
+        if header not in data:
+            return False
+    return True
 
-## all queue items take the following in the 
-@app.route(f'/api/v0/add_queue_item', methods = ["GET"])
+
+
+def fulfil_request(data):
+    """
+    takes the input from the api call and then returns the data we are interested in
+    We will create a helper method to check whether the data of interest is in CockroachDB and instead use that if possible
+    (an if statement of sorts)
+    """
+
+    ## if data in cockroachdb, get that and return
+
+    ## else get the data from the google maps api and return that
+    ## make sure to add this data to cockroach db too!
+
+    return None
+
+## get all info 
+@app.route(f'/api/v0/get_all', methods = ["GET"])
 def add_queue():
-    uid = get_user_id(request)
-    if uid:
-        del uid
+    data = request.get_json()
+    if check_headers(data, ["type"]):
+        ## do thing
+        return processed_data,200
 
-
-@app.route(f'/api/v0/remove_queue_item', methods = ["GET"])
+#A json get request with {coordinates:(lat,lng), radius:float, type: library, building, all}
+@app.route(f'/api/v0/get_near', methods = ["GET"])
 def remove_queue():
-    uid = get_user_id(request)
-
-@app.route(f'/api/v0/decouple_item', methods = ["GET"])
-def decouple_request():
-    uid = get_user_id(request)
+    data = request.get_json()
+    if check_headers(data, ["coordinates", "radius", "type", "building", "all"]):
+        return data, 200
+        #return the final data
 
 
 @app.route(f'/api/v0/alive', methods = ["GET"])
