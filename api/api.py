@@ -107,6 +107,9 @@ def get_key_time(key, cur):
 
 @app.route(f'/api/v0/update', methods = ["GET"])
 def update():
+   conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=root.crt'
+   conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
+   conn = psycopg2.connect(conn_str)
    back_run(conn) 
    return "",200
 
