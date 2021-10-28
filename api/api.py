@@ -48,8 +48,6 @@ def check_headers(data, headers):
     return True
 
 
-
-
 def fulfil_request(data):
     """
     takes the input from the api call and then returns the data we are interested in
@@ -109,6 +107,9 @@ def get_key_time(key, cur):
 
 @app.route(f'/api/v0/update', methods = ["GET"])
 def update():
+   conn_str = f'{os.getenv("DB_CONN").strip("")}?sslmode=verify-full&sslrootcert=root.crt'
+   conn_str =  urllib.parse.unquote(os.path.expandvars(conn_str))
+   conn = psycopg2.connect(conn_str)
    back_run(conn) 
    return "",200
 
@@ -159,9 +160,6 @@ def back_run(conn = conn, time_diff = timedelta(minutes = 21)):
 
     conn.commit()
     last_updated = datetime.now()
-
-# with open("root2.crt","w") as f:
-#     f.write(os.getenv("ROOT_KEY"))
     
 try:
 
