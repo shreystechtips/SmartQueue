@@ -8,6 +8,11 @@ body {
     background-color: var(--light-blue);
     overflow: hidden;
     font-family: 'Mulish', sans-serif;
+    margin: 0;
+}
+
+#home {
+    height: 100vh;
 }
 
 a, a:hover, a:focus, a:active {
@@ -22,28 +27,28 @@ a, a:hover, a:focus, a:active {
 }
 
 #circle-1 {
-    top: -25vh;
-    left: -20vh;
+    top: -25vmin;
+    left: -20vmin;
 
-    width: 125vh;
-    height: 125vh;
+    width: 125vmin;
+    height: 125vmin;
 }
 
 #circle-2 {
-    left: 110vh;
-    top: 5vh;
+    left: 110vmin;
+    top: 5vmin;
 
-    width: 50vh;
-    height: 50vh;
+    width: 50vmin;
+    height: 50vmin;
 
     opacity: 0.75;
 }
 
 #circle-3 {
-    width: 75vh;
-    height: 75vh;
-    left: 90vh;
-    top: 70vh;
+    width: 75vmin;
+    height: 75vmin;
+    left: 90vmin;
+    top: 70vmin;
 
     opacity: 0.5;
 }
@@ -65,21 +70,27 @@ a, a:hover, a:focus, a:active {
 
 #title {
     position: absolute;
-    top: 44%;
-    left: 20%;
+    bottom: 0;
+    top: 0;
+    left: 5vmin;
+    margin: auto;
+    height: min-content;
     font-weight: 800;
+    width: 50vw;
+
+    z-index: 100;
 
     color: white;
 }
 
 #title-header {
-    font-size: 10vh;
+    font-size: 10vmin;
 }
 
 #title-description {
-    font-size: 5vh;
+    font-size: 5vmin;
 
-    height: 15vh;
+    height: 15vmin;
 
     display: flex;
     justify-content: center;
@@ -97,14 +108,14 @@ a, a:hover, a:focus, a:active {
 
     padding: 12px 16px;
 
-    font-size: 3vh;
+    font-size: 3vmin;
     font-weight: 800;
 
     cursor: pointer;
 
     border: none; 
 
-    margin-top: 1.5vh;
+    margin-top: 1.5vmin;
 }
 
 #sidebar {
@@ -118,7 +129,7 @@ a, a:hover, a:focus, a:active {
 
 #sidebar-header {
     padding: 16px 32px;
-    font-size: 5vh;
+    font-size: 5vmin;
     font-weight: 700;
     color: white;
 
@@ -146,7 +157,7 @@ a, a:hover, a:focus, a:active {
 
     cursor: pointer;
 
-    font-size: 2.5vh;
+    font-size: 2.5vmin;
     font-weight: 600;
 
     min-height: min-content;
@@ -156,29 +167,85 @@ a, a:hover, a:focus, a:active {
 }
 
 .library-name {
-    font-size: 3vh;
+    font-size: 3vmin;
     font-weight: 700;
 }
 
 .library-drop {
-    font-size: 5vh;
+    font-size: 5vmin;
     font-weight: 600;
-}
-
-.library-popularity {
-    font-size: 2.5vh;
-    font-weight: 600;
-}
-
-.library-times-title {
-    
 }
 .library-times-ranges {
     padding-left: 16px;
-    font-size: 2vh;
+    font-size: 2vmin;
     font-weight: 600;
 }
 .library-location {
     text-decoration: underline;
     font-weight: 700
+}
+
+@media (orientation: portrait) {
+    body {
+        overflow: auto;
+    }
+    #home {
+        overflow: hidden;
+    }
+    #circle-3 {
+        top: unset;
+        bottom: -30vmin;
+        left: unset;
+        right: -30vmin;
+    }
+    #circle-2 {
+        left: unset;
+        right: -80vmin;
+        top: -70vmin;
+        height: 125vmin;
+        width: 125vmin;
+    }
+    #circle-1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -60vw;
+        width: 150vmin;
+        height: 150vmin;
+        margin: auto;
+    }
+    #home {
+        position: relative;
+        height: 100vh;
+        overflow-x: hidden;
+    }
+    #title {
+        left: 0;
+        right: 0;
+        width: 90vw;
+    }
+    #sidebar-header {
+        border-top-left-radius: 0;
+        padding: 16px;
+        font-size: 6vw;
+    }
+    #sidebar {
+        border-top-left-radius: 0;
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+    }
+    .library {
+        font-size: 3.5vw;
+    }
+    .library-name {
+        font-size: 5vw;
+    }
+    
+    .library-drop {
+        font-size: 7.5vw;
+    }
+    .library-times-ranges {
+        font-size: 3vmin;
+    }
 }
