@@ -27,7 +27,7 @@ export default function Title({ setPage, setLat, setLng }) {
     return (
         <div id="title">
             <div id="title-header">
-            Libearium  
+            LiBearium  
             </div>
 
             <div id="title-description" onClick={toggleDescIndex}>
